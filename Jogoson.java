@@ -16,13 +16,13 @@ public class Jogoson {
                 result = parseString( s );
                 break;
             default:
-                throw new RuntimeException("no type of json value starts with '" + c + "'");// TODO err
+                throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s.i);
             }
 
             parseWhitespace(s);
 
             if( s.notDone() ){
-                throw new RuntimeException("surplus characters after a valid json");// TODO err
+                throw new JsonParsingFailedException("surplus characters after a valid json", s.i);
             }
  
         }else{
@@ -45,7 +45,7 @@ public class Jogoson {
                     state = 1;
                     break;
                 }else{
-                    throw new RuntimeException("a string value should starts with '\"'");// TODO err
+                    throw new JsonParsingFailedException("a string value should starts with '\"'", s.i);
                 }
             case 1:// in the string
                 switch( c ){
@@ -79,7 +79,7 @@ public class Jogoson {
         }
 
         if( state != -1 ){
-            throw new RuntimeException("the string does not ends with '\"'");// TODO err
+            throw new JsonParsingFailedException("the string does not ends with '\"'", s.i);
         }
 
         return result.toString();
