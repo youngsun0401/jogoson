@@ -10,11 +10,17 @@ public class Jogoson {
         parseWhitespace(s);
 
         if( s.notDone() ){
-            result = null;// TODO value 알맹이
+            char c = s.check();
+            switch( c ){
+            case '"':
+                result = parseString( s );
+                break;
+            default:
+                throw new RuntimeException("no type of json value starts with '" + c + "'");// TODO err
+            }
 
             parseWhitespace(s);
 
-            //// 남아있으면 에러
             if( s.notDone() ){
                 throw new RuntimeException("surplus characters after a valid json");// TODO err
             }
@@ -26,9 +32,62 @@ public class Jogoson {
         return result;
     }
 
+    private String parseString( StringToBeParsed s ) {
+        StringBuilder result = new StringBuilder();
+
+        int state = 0;
+        boolean more = true;
+        while( more && s.notDone() ){
+            char c = s.pop();
+            switch( state ){
+            case 0:// start
+                if( c == '"' ){
+                    state = 1;
+                    break;
+                }else{
+                    throw new RuntimeException("a string value should starts with '\"'");// TODO err
+                }
+            case 1:// in the string
+                switch( c ){
+                case '\\':
+                    state = 2;
+                    break;
+                case '"':
+                    state = -1;
+                    break;
+                // TODO control characters
+                default:
+                    result.append(c);
+                }
+                break;
+            case 2:// escape
+                switch( c ){
+                case '\\':
+                    result.append('\\');
+                    state = 1;
+                    break;
+                case '"':
+                    result.append('"');
+                    state = 1;
+                    break;
+                // TODO others
+                }
+            case -1:// the string ends
+                more = false;
+                break;
+            }
+        }
+
+        if( state != -1 ){
+            throw new RuntimeException("the string does not ends with '\"'");// TODO err
+        }
+
+        return result.toString();
+    }
+
     public void parseWhitespace( StringToBeParsed s ){
-        boolean b = true;
-        while( b && s.notDone() ){
+        boolean more = true;
+        while( more && s.notDone() ){
             char c = s.pop();
             switch( c ){
             case ' ':
@@ -38,7 +97,7 @@ public class Jogoson {
                 break;
             default:
                 s.back();
-                b = false;
+                more = false;
             }
         }
     }
@@ -56,6 +115,10 @@ public class Jogoson {
                 return true;
             else
                 return false;
+        }
+
+        public char check(){
+            return cs[i];
         }
 
         public char pop(){
