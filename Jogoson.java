@@ -5,16 +5,25 @@ public class Jogoson {
     }
 
     public Object parseValue( StringToBeParsed s ){
-        parseWhitespace(s);
-        // TODO value 알맹이
+        Object result;
+
         parseWhitespace(s);
 
-        //// 남아있으면 에러
         if( s.notDone() ){
-            throw new RuntimeException("surplus characters after a valid json");// TODO err
+            result = null;// TODO value 알맹이
+
+            parseWhitespace(s);
+
+            //// 남아있으면 에러
+            if( s.notDone() ){
+                throw new RuntimeException("surplus characters after a valid json");// TODO err
+            }
+ 
+        }else{
+            result = null;
         }
 
-        return null;// TODO
+        return result;
     }
 
     public void parseWhitespace( StringToBeParsed s ){
