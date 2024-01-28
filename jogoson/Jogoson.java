@@ -1,3 +1,4 @@
+package jogoson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ public class Jogoson {
         Object result = parseValue(s);
 
         if( s.notDone() ){
-            throw new JsonParsingFailedException("surplus characters after a valid json", s.i);
+            throw new JsonParsingFailedException("surplus characters after a valid json");
         }
 
         return result;
@@ -32,11 +33,11 @@ public class Jogoson {
                  && s.notDone()
                  && s.pop() == 'l'
                  && s.notDone()
-                && s.pop() == 'l'
+                 && s.pop() == 'l'
                 ){
                     result = null;
                 }else{
-                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'null')", s.i);
+                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'null')", s);
                 }
                 break;
             case 't':
@@ -50,7 +51,7 @@ public class Jogoson {
                 ){
                     result = true;
                 }else{
-                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'true')", s.i);
+                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'true')", s);
                 }
                 break;
             case 'f':
@@ -66,7 +67,7 @@ public class Jogoson {
                 ){
                     result = false;
                 }else{
-                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'false')", s.i);
+                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'false')", s);
                 }
                 break;
             case '-':
@@ -92,7 +93,7 @@ public class Jogoson {
                 result = parseArray( s );
                 break;
             default:
-                throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s.i);
+                throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s);
             }
 
             parseWhitespace(s);
@@ -155,7 +156,7 @@ public class Jogoson {
             }
             break;
         default:
-            throw new JsonParsingFailedException("invalid format (expected a number here)", s.i-1);
+            throw new JsonParsingFailedException("invalid format (expected a number here)", s);
         }
 
         //// 소수점
@@ -177,7 +178,7 @@ public class Jogoson {
                 result.append(c);
                 break;
             default:
-                throw new JsonParsingFailedException("invalid format (expected a number after the decimal point)", s.i-1);
+                throw new JsonParsingFailedException("invalid format (expected a number after the decimal point)", s);
             }
             boolean more = true;
             while( more && s.notDone() ){
@@ -232,7 +233,7 @@ public class Jogoson {
                         result.append(c);
                         break;
                     default:
-                        throw new JsonParsingFailedException("invalid format (expected a number here)", s.i-1);
+                        throw new JsonParsingFailedException("invalid format (expected a number here)", s);
                     }
                     while( more && s.notDone() ){
                         c = s.pop();
@@ -256,10 +257,10 @@ public class Jogoson {
                         }
                     }
                 }else{
-                    throw new JsonParsingFailedException("invalid format (expected a number here)", -1);
+                    throw new JsonParsingFailedException("invalid format (expected a number here)", s);
                 }
             }else{
-                throw new JsonParsingFailedException("invalid format (expected a number or '+' or '-' here)", -1);
+                throw new JsonParsingFailedException("invalid format (expected a number or '+' or '-' here)", s);
             }
 
         }else{
@@ -290,7 +291,7 @@ public class Jogoson {
                     state = 1;
                     break;
                 }else{
-                    throw new JsonParsingFailedException("a string value should start with '\"'", s.i-1);
+                    throw new JsonParsingFailedException("a string value should start with '\"'", s);
                 }
             case 1:// in the string
                 switch( c ){
@@ -325,7 +326,7 @@ public class Jogoson {
         }
 
         if( state != -1 ){
-            throw new JsonParsingFailedException("the string does not end with '\"'", s.i);
+            throw new JsonParsingFailedException("the string does not end with '\"'", s);
         }
 
         return result.toString();
@@ -365,10 +366,10 @@ public class Jogoson {
                         case '}':
                             return result;
                         default:
-                            throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s.i-1);
+                            throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s);
                         }
                     }else{
-                        throw new JsonParsingFailedException("TODO", s.i);// TODO
+                        throw new JsonParsingFailedException("TODO", s);// TODO
                     }
                     break;
                 }case 3 :{
@@ -379,9 +380,9 @@ public class Jogoson {
                 }
                 }
             }
-            throw new JsonParsingFailedException("the object does not end", s.i-1);
+            throw new JsonParsingFailedException("the object does not end", s);
         }else{
-            throw new JsonParsingFailedException("the object does not start with '{'", s.i-1);
+            throw new JsonParsingFailedException("the object does not start with '{'", s);
         }
     }
 
@@ -413,15 +414,15 @@ public class Jogoson {
                     case ']':
                         return result;
                     default:
-                        throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s.i-1);
+                        throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s);
                     }
                     break;
                 }
                 }
             }
-            throw new JsonParsingFailedException("the object does not end", s.i-1);
+            throw new JsonParsingFailedException("the object does not end", s);
         }else{
-            throw new JsonParsingFailedException("the object does not start with '{'", s.i-1);
+            throw new JsonParsingFailedException("the object does not start with '{'", s);
         }
 
     }
@@ -443,9 +444,9 @@ public class Jogoson {
         }
     }
 
-    private class StringToBeParsed {
-        private int i = 0;// 이 위치를 처리할 차례
-        private final char[] cs;
+    public class StringToBeParsed {
+        int i = 0;// 이 위치를 처리할 차례
+        final char[] cs;
 
         public StringToBeParsed( String jsonString ){
             cs = jsonString.toCharArray();
@@ -463,7 +464,11 @@ public class Jogoson {
         }
 
         public char pop(){
-            return cs[i++];
+            try{
+                return cs[i++];
+            }catch( ArrayIndexOutOfBoundsException e ){
+                throw new JsonParsingFailedException("TODO", this);
+            }
         }
 
         public void back(){
