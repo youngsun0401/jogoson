@@ -6,7 +6,7 @@ public class JsonParsingFailedException extends IllegalArgumentException {
         super(
             ( s.i > s.cs.length )
             ? "failed to parse a json string at the end of string ... msg: " + msg
-            : "failed to parse a json string at index " + --s.i + "..." + s + " ... msg: " + msg);
+            : "failed to parse a json string at index " + --s.i + "... " + s + "  ... msg: " + msg);
     }
     public JsonParsingFailedException( String msg ){
         super("failed to parse a json string at the end of string ... msg: " + msg);

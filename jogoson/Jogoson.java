@@ -122,7 +122,8 @@ public class Jogoson {
         switch( c ){
         case '0':
             result.append('0');
-            s.i++;
+            s.i += 1;
+            c = s.pop();
             break;
         case '1':
         case '2':
@@ -484,8 +485,10 @@ public class Jogoson {
             int i1 = ( 0 < i-20 ) ? i-20 : 0;
             int i2 = ( cs.length > i+20 ) ? i+20 : cs.length;
             String s = new String(cs);
-            s.replaceAll("\n", " ");
-            s.replaceAll("\t", " ");
+            s = s.replaceAll("\n", " ")
+                 .replaceAll("\r", " ")
+                 .replaceAll("\t", " ")
+                 .replaceAll("\s", " ");
             sb.append(s.substring(i1, i));
             sb.append('{');
             sb.append('{');
