@@ -1,12 +1,13 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.management.RuntimeErrorException;
 
 public class Jogoson {
 
     public Object parseValue( String ss ){
         StringToBeParsed s = new StringToBeParsed(ss);
+
         Object result = parseValue(s);
 
         if( s.notDone() ){
@@ -86,6 +87,9 @@ public class Jogoson {
                 break;
             case '{':
                 result = parseObject( s );
+                break;
+            case '[':
+                result = parseArray( s );
                 break;
             default:
                 throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s.i);
@@ -351,28 +355,23 @@ public class Jogoson {
                     parseWhitespace(s);
                     c = s.pop();
                     if( c == ':' ){
-                        state = 3;
+                        value = parseValue(s);
+                        result.put(key, value);
+                        c = s.pop();
+                        switch( c ){
+                        case ',':
+                            state = 3;
+                            break;
+                        case '}':
+                            return result;
+                        default:
+                            throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s.i-1);
+                        }
                     }else{
                         throw new JsonParsingFailedException("TODO", s.i);// TODO
                     }
                     break;
                 }case 3 :{
-                    value = parseValue(s);
-                    result.put(key, value);
-                    state = 4;
-                    break;
-                }case 4 :{
-                    c = s.pop();
-                    switch( c ){
-                    case ',':
-                        state = 5;
-                        break;
-                    case '}':
-                        return result;
-                    default:
-                        throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s.i-1);
-                    }
-                }case 5 :{
                     parseWhitespace(s);
                     key = parseString(s);
                     state = 2;
@@ -384,6 +383,47 @@ public class Jogoson {
         }else{
             throw new JsonParsingFailedException("the object does not start with '{'", s.i-1);
         }
+    }
+
+    private List<Object> parseArray( StringToBeParsed s ){
+        char c;
+        int state = 1;
+        Object value;
+        List<Object> result = new ArrayList<>();
+        c = s.pop();
+        if( c == '[' ){
+            while( s.notDone() ){
+                switch( state ){
+                case 1 :{
+                    parseWhitespace(s);
+                    c = s.pop();
+                    if( c == ']' ){
+                        return result;
+                    }
+                    s.back();
+                    state = 2;
+                    break;
+                }case 2 :{
+                    value = parseValue(s);
+                    result.add(value);
+                    c = s.pop();
+                    switch( c ){
+                    case ',':
+                        break;
+                    case ']':
+                        return result;
+                    default:
+                        throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s.i-1);
+                    }
+                    break;
+                }
+                }
+            }
+            throw new JsonParsingFailedException("the object does not end", s.i-1);
+        }else{
+            throw new JsonParsingFailedException("the object does not start with '{'", s.i-1);
+        }
+
     }
 
     private void parseWhitespace( StringToBeParsed s ){
