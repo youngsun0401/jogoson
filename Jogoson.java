@@ -469,5 +469,28 @@ public class Jogoson {
         public void back(){
             i -= 1;
         }
+
+        public String toString(){
+            if( i >= cs.length ){
+                return "END";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            int i1 = ( 0 < i-20 ) ? i-20 : 0;
+            int i2 = ( cs.length > i+20 ) ? i+20 : cs.length;
+            String s = new String(cs);
+            s.replaceAll("\n", " ");
+            s.replaceAll("\t", " ");
+            sb.append(s.substring(i1, i));
+            sb.append('{');
+            sb.append('{');
+            sb.append(' ');
+            sb.append(s.substring(i, i+1));
+            sb.append(' ');
+            sb.append('}');
+            sb.append('}');
+            sb.append(s.substring(i+1, i2));
+            return sb.toString();
+        }
     }
 }
