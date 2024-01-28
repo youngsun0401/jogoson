@@ -1,3 +1,5 @@
+import javax.management.RuntimeErrorException;
+
 public class Jogoson {
 
     public Object parseValue( String s ){
@@ -14,6 +16,19 @@ public class Jogoson {
             switch( c ){
             case '"':
                 result = parseString( s );
+                break;
+            case '-':
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                result = parseNumber( s );
                 break;
             default:
                 throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s.i);
@@ -32,6 +47,179 @@ public class Jogoson {
         return result;
     }
 
+    private Object parseNumber( StringToBeParsed s ) {// TODO 타입 옵션?
+        StringBuilder result = new StringBuilder();
+        
+        int resultType = 1;// 1:정수 / 2:실수 / 3:실수(E어쩌구)
+        char c;
+
+        //// 부호
+        c = s.check();
+        if( c == '-' ){
+            result.append('-');
+            s.i++;
+        }
+        //// 정수 부분
+        c = s.check();
+        switch( c ){
+        case '0':
+            result.append('0');
+            s.i++;
+            break;
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            boolean more = true;
+            while( more && s.notDone() ){
+                c = s.pop();
+                switch( c ){
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    result.append(c);
+                    break;
+                default:
+                    more = false;
+                    break;
+                }
+            }
+            break;
+        default:
+            throw new JsonParsingFailedException("invalid format (expected a number here)", s.i-1);
+        }
+
+        //// 소수점
+        if( c == '.' ){
+            resultType = 2;
+            result.append('.');
+            c = s.pop();
+            switch( c ){
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                result.append(c);
+                break;
+            default:
+                throw new JsonParsingFailedException("invalid format (expected a number after the decimal point)", s.i-1);
+            }
+            boolean more = true;
+            while( more && s.notDone() ){
+                c = s.pop();
+                switch( c ){
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    result.append(c);
+                    break;
+                default:
+                    more = false;
+                    break;
+                }
+            }
+        }
+
+        //// 지수
+        if( c == 'E' || c == 'e' ){
+            resultType = 3;
+            result.append('E');
+            boolean more = true;
+            //// 부호
+            if( s.notDone() ){
+                c = s.pop();
+                if( c == '+' || c == '-' ){
+                    result.append(c);
+                }else{
+                    s.back();
+                }
+                //// 숫자
+                if( s.notDone() ){
+                    c = s.pop();
+                    switch( c ){
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        result.append(c);
+                        break;
+                    default:
+                        throw new JsonParsingFailedException("invalid format (expected a number here)", s.i-1);
+                    }
+                    while( more && s.notDone() ){
+                        c = s.pop();
+                        switch( c ){
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                            result.append(c);
+                            break;
+                        default:
+                            s.back();
+                            more = false;
+                            break;
+                        }
+                    }
+                }else{
+                    throw new JsonParsingFailedException("invalid format (expected a number here)", -1);
+                }
+            }else{
+                throw new JsonParsingFailedException("invalid format (expected a number or '+' or '-' here)", -1);
+            }
+
+        }else{
+            s.back();
+        }
+
+        switch( resultType ){
+        case 1:
+            return Integer.parseInt(result.toString());
+        case 2:
+        case 3:
+            return Double.parseDouble(result.toString());
+        default:
+            throw new RuntimeException("expected never happen ... pnweuwpqioffkdjgsdfdybufgyugsf");
+        }
+    }
+
     private String parseString( StringToBeParsed s ) {
         StringBuilder result = new StringBuilder();
 
@@ -45,7 +233,7 @@ public class Jogoson {
                     state = 1;
                     break;
                 }else{
-                    throw new JsonParsingFailedException("a string value should starts with '\"'", s.i);
+                    throw new JsonParsingFailedException("a string value should start with '\"'", s.i-1);
                 }
             case 1:// in the string
                 switch( c ){
@@ -79,7 +267,7 @@ public class Jogoson {
         }
 
         if( state != -1 ){
-            throw new JsonParsingFailedException("the string does not ends with '\"'", s.i);
+            throw new JsonParsingFailedException("the string does not end with '\"'", s.i);
         }
 
         return result.toString();
