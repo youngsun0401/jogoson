@@ -14,8 +14,49 @@ public class Jogoson {
         if( s.notDone() ){
             char c = s.check();
             switch( c ){
-            case '"':
-                result = parseString( s );
+            case 'n':
+                s.i++;
+                if( s.notDone()
+                 && s.pop() == 'u'
+                 && s.notDone()
+                 && s.pop() == 'l'
+                 && s.notDone()
+                && s.pop() == 'l'
+                ){
+                    result = null;
+                }else{
+                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'null')", s.i);
+                }
+                break;
+            case 't':
+                s.i++;
+                if( s.notDone()
+                 && s.pop() == 'r'
+                 && s.notDone()
+                 && s.pop() == 'u'
+                 && s.notDone()
+                 && s.pop() == 'e'
+                ){
+                    result = true;
+                }else{
+                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'true')", s.i);
+                }
+                break;
+            case 'f':
+                s.i++;
+                if( s.notDone()
+                 && s.pop() == 'a'
+                 && s.notDone()
+                 && s.pop() == 'l'
+                 && s.notDone()
+                 && s.pop() == 's'
+                 && s.notDone()
+                 && s.pop() == 'e'
+                ){
+                    result = false;
+                }else{
+                    throw new JsonParsingFailedException("invalid format (it seemed to be a 'false')", s.i);
+                }
                 break;
             case '-':
             case '0':
@@ -29,6 +70,9 @@ public class Jogoson {
             case '8':
             case '9':
                 result = parseNumber( s );
+                break;
+            case '"':
+                result = parseString( s );
                 break;
             default:
                 throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s.i);
@@ -273,7 +317,7 @@ public class Jogoson {
         return result.toString();
     }
 
-    public void parseWhitespace( StringToBeParsed s ){
+    private void parseWhitespace( StringToBeParsed s ){
         boolean more = true;
         while( more && s.notDone() ){
             char c = s.pop();
