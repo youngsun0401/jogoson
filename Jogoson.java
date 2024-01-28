@@ -1,12 +1,22 @@
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.management.RuntimeErrorException;
 
 public class Jogoson {
 
-    public Object parseValue( String s ){
-        return parseValue(new StringToBeParsed(s));
+    public Object parseValue( String ss ){
+        StringToBeParsed s = new StringToBeParsed(ss);
+        Object result = parseValue(s);
+
+        if( s.notDone() ){
+            throw new JsonParsingFailedException("surplus characters after a valid json", s.i);
+        }
+
+        return result;
     }
 
-    public Object parseValue( StringToBeParsed s ){
+    private Object parseValue( StringToBeParsed s ){
         Object result;
 
         parseWhitespace(s);
@@ -74,15 +84,14 @@ public class Jogoson {
             case '"':
                 result = parseString( s );
                 break;
+            case '{':
+                result = parseObject( s );
+                break;
             default:
                 throw new JsonParsingFailedException("no type of json value starts with '" + c + "'", s.i);
             }
 
             parseWhitespace(s);
-
-            if( s.notDone() ){
-                throw new JsonParsingFailedException("surplus characters after a valid json", s.i);
-            }
  
         }else{
             result = null;
@@ -305,6 +314,7 @@ public class Jogoson {
                 // TODO others
                 }
             case -1:// the string ends
+                s.back();
                 more = false;
                 break;
             }
@@ -315,6 +325,65 @@ public class Jogoson {
         }
 
         return result.toString();
+    }
+
+    private Map<String, Object> parseObject( StringToBeParsed s ){
+        char c;
+        int state = 1;
+        String key = null;
+        Object value;
+        Map<String, Object> result = new HashMap<>();
+        c = s.pop();
+        if( c == '{' ){
+            while( s.notDone() ){
+                switch( state ){
+                case 1 :{
+                    parseWhitespace(s);
+                    c = s.pop();
+                    if( c == '}' ){
+                        return result;
+                    }
+                    s.back();
+                    key = parseString(s);
+                    state = 2;
+                    break;
+                }case 2 :{
+                    parseWhitespace(s);
+                    c = s.pop();
+                    if( c == ':' ){
+                        state = 3;
+                    }else{
+                        throw new JsonParsingFailedException("TODO", s.i);// TODO
+                    }
+                    break;
+                }case 3 :{
+                    value = parseValue(s);
+                    result.put(key, value);
+                    state = 4;
+                    break;
+                }case 4 :{
+                    c = s.pop();
+                    switch( c ){
+                    case ',':
+                        state = 5;
+                        break;
+                    case '}':
+                        return result;
+                    default:
+                        throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s.i-1);
+                    }
+                }case 5 :{
+                    parseWhitespace(s);
+                    key = parseString(s);
+                    state = 2;
+                    break;
+                }
+                }
+            }
+            throw new JsonParsingFailedException("the object does not end", s.i-1);
+        }else{
+            throw new JsonParsingFailedException("the object does not start with '{'", s.i-1);
+        }
     }
 
     private void parseWhitespace( StringToBeParsed s ){
