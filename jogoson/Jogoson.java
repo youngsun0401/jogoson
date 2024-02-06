@@ -97,7 +97,7 @@ public class Jogoson {
             }
 
             parseWhitespace(s);
- 
+
         }else{
             result = null;
         }
@@ -107,7 +107,7 @@ public class Jogoson {
 
     private Object parseNumber( StringToBeParsed s ) {// TODO 타입 옵션?
         StringBuilder result = new StringBuilder();
-        
+
         int resultType = 1;// 1:정수 / 2:실수 / 3:실수(E어쩌구)
         char c;
 
@@ -157,7 +157,7 @@ public class Jogoson {
             }
             break;
         default:
-            throw new JsonParsingFailedException("invalid format (expected a number here)", s);
+            throw new JsonParsingFailedException("invalid format (expected a number here but " + c + ")", s);
         }
 
         //// 소수점
@@ -179,7 +179,7 @@ public class Jogoson {
                 result.append(c);
                 break;
             default:
-                throw new JsonParsingFailedException("invalid format (expected a number after the decimal point)", s);
+                throw new JsonParsingFailedException("invalid format (expected a number after the decimal point but " + c + ")", s);
             }
             boolean more = true;
             while( more && s.notDone() ){
@@ -234,7 +234,7 @@ public class Jogoson {
                         result.append(c);
                         break;
                     default:
-                        throw new JsonParsingFailedException("invalid format (expected a number here)", s);
+                        throw new JsonParsingFailedException("invalid format (expected a number here but " + c + ")", s);
                     }
                     while( more && s.notDone() ){
                         c = s.pop();
@@ -268,14 +268,21 @@ public class Jogoson {
             s.back();
         }
 
-        switch( resultType ){
-        case 1:
-            return Integer.parseInt(result.toString());
-        case 2:
-        case 3:
-            return Double.parseDouble(result.toString());
-        default:
-            throw new RuntimeException("expected never happen ... pnweuwpqioffkdjgsdfdybufgyugsf");
+        try{
+            switch( resultType ){
+                case 1:
+                    // return Long.parseLong(result.toString());
+                    return Integer.parseInt(result.toString());
+                case 2:
+                case 3:
+                    return Double.parseDouble(result.toString());
+                default:
+                    throw new RuntimeException("expected never happen ... pnweuwpqioffkdjgsdfdybufgyugsf");
+                }
+        }catch( NumberFormatException e ){
+            JsonParsingFailedException ee = new JsonParsingFailedException(
+                result.toString() + "을 해당 자바타입으로 파싱할 수 없음", s, e);
+            throw ee;
         }
     }
 
@@ -415,15 +422,15 @@ public class Jogoson {
                     case ']':
                         return result;
                     default:
-                        throw new JsonParsingFailedException("invalid oject format (expected ',' or '}' here)", s);
+                        throw new JsonParsingFailedException("invalid array format (expected ',' or ']' here but " + c + ")", s);
                     }
                     break;
                 }
                 }
             }
-            throw new JsonParsingFailedException("the object does not end", s);
+            throw new JsonParsingFailedException("the array does not end", s);
         }else{
-            throw new JsonParsingFailedException("the object does not start with '{'", s);
+            throw new JsonParsingFailedException("the array does not start with '['", s);
         }
 
     }
