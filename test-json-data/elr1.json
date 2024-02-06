@@ -1,0 +1,401 @@
+{
+    "took": 794,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 5313,
+            "relation": "eq"
+        },
+        "max_score": null,
+        "hits": []
+    },
+    "aggregations": {
+        "device_id": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": "1",
+                    "doc_count": 1771,
+                    "last_doc": {
+                        "hits": {
+                            "total": {
+                                "value": 1771,
+                                "relation": "eq"
+                            },
+                            "max_score": null,
+                            "hits": [
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "qxTyII0BUNG5nRFKMzaB",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:59:12.000Z"
+                                    },
+                                    "sort": [
+                                        1705654752000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "bRTkII0BUNG5nRFKZyzV",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:44:07.000Z"
+                                    },
+                                    "sort": [
+                                        1705653847000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "UJfWII0BGm2sYimNnCEg",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:29:01.000Z"
+                                    },
+                                    "sort": [
+                                        1705652941000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "gRTIII0BUNG5nRFKqRom",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:13:56.000Z"
+                                    },
+                                    "sort": [
+                                        1705652036000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "3pe6II0BGm2sYimN3RMO",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:58:50.000Z"
+                                    },
+                                    "sort": [
+                                        1705651130000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "IRStII0BUNG5nRFKEQiU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:43:45.000Z"
+                                    },
+                                    "sort": [
+                                        1705650225000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "65efII0BGm2sYimNRgcU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:28:39.000Z"
+                                    },
+                                    "sort": [
+                                        1705649319000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "9xORII0BUNG5nRFKevZ8",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:13:34.000Z"
+                                    },
+                                    "sort": [
+                                        1705648414000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "1paDII0BGm2sYimNrvqU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T06:58:28.000Z"
+                                    },
+                                    "sort": [
+                                        1705647508000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "HhN1II0BUNG5nRFK4uOO",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T06:43:23.000Z"
+                                    },
+                                    "sort": [
+                                        1705646603000
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "2",
+                    "doc_count": 1771,
+                    "last_doc": {
+                        "hits": {
+                            "total": {
+                                "value": 1771,
+                                "relation": "eq"
+                            },
+                            "max_score": null,
+                            "hits": [
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "rBTyII0BUNG5nRFKMzaB",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:59:12.000Z"
+                                    },
+                                    "sort": [
+                                        1705654752000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "bhTkII0BUNG5nRFKZyzV",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:44:07.000Z"
+                                    },
+                                    "sort": [
+                                        1705653847000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "UZfWII0BGm2sYimNnCEg",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:29:01.000Z"
+                                    },
+                                    "sort": [
+                                        1705652941000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "ghTIII0BUNG5nRFKqRom",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:13:56.000Z"
+                                    },
+                                    "sort": [
+                                        1705652036000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "35e6II0BGm2sYimN3RMO",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:58:50.000Z"
+                                    },
+                                    "sort": [
+                                        1705651130000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "IhStII0BUNG5nRFKEQiU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:43:45.000Z"
+                                    },
+                                    "sort": [
+                                        1705650225000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "7JefII0BGm2sYimNRgcU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:28:39.000Z"
+                                    },
+                                    "sort": [
+                                        1705649319000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "-BORII0BUNG5nRFKevZ8",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:13:34.000Z"
+                                    },
+                                    "sort": [
+                                        1705648414000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "15aDII0BGm2sYimNrvqU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T06:58:28.000Z"
+                                    },
+                                    "sort": [
+                                        1705647508000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "HxN1II0BUNG5nRFK4uOO",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T06:43:23.000Z"
+                                    },
+                                    "sort": [
+                                        1705646603000
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "3",
+                    "doc_count": 1771,
+                    "last_doc": {
+                        "hits": {
+                            "total": {
+                                "value": 1771,
+                                "relation": "eq"
+                            },
+                            "max_score": null,
+                            "hits": [
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "rRTyII0BUNG5nRFKMzaB",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:59:12.000Z"
+                                    },
+                                    "sort": [
+                                        1705654752000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "bxTkII0BUNG5nRFKZyzV",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:44:07.000Z"
+                                    },
+                                    "sort": [
+                                        1705653847000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "UpfWII0BGm2sYimNnCEg",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:29:01.000Z"
+                                    },
+                                    "sort": [
+                                        1705652941000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "gxTIII0BUNG5nRFKqRom",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T08:13:56.000Z"
+                                    },
+                                    "sort": [
+                                        1705652036000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "4Je6II0BGm2sYimN3RMO",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:58:50.000Z"
+                                    },
+                                    "sort": [
+                                        1705651130000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "IxStII0BUNG5nRFKEQiU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:43:45.000Z"
+                                    },
+                                    "sort": [
+                                        1705650225000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "7ZefII0BGm2sYimNRgcU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:28:39.000Z"
+                                    },
+                                    "sort": [
+                                        1705649319000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "-RORII0BUNG5nRFKevZ8",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T07:13:34.000Z"
+                                    },
+                                    "sort": [
+                                        1705648414000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "2JaDII0BGm2sYimNrvqU",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T06:58:28.000Z"
+                                    },
+                                    "sort": [
+                                        1705647508000
+                                    ]
+                                },
+                                {
+                                    "_index": "knu_library_999",
+                                    "_id": "IBN1II0BUNG5nRFK4uOO",
+                                    "_score": null,
+                                    "_source": {
+                                        "@timestamp": "2024-01-19T06:43:23.000Z"
+                                    },
+                                    "sort": [
+                                        1705646603000
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

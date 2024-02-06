@@ -1,0 +1,143 @@
+{
+    "size": 0,
+    "query": {
+        "bool": {
+            "filter": [
+                {
+                    "terms": {
+                        "product_type": ["ABC", "DEF"]
+                    }
+                },
+                {
+                    "range": {
+                        "@timestamp": {
+                            "lt": "2024-01-25T00:00:00+09:00",
+                            "gte": "2024-01-23T00:00:00+09:00"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "index": "knu_library_999",
+    "aggs": {
+        "sumsum": {
+            "filter": {
+                "bool": {
+                    "filter": [
+                        {
+                            "terms": {
+                                "data_source": ["whitehouse", "uriJip", "earth"]
+                            }
+                        },
+                        {
+                            "range": {
+                                "@timestamp": {
+                                    "lt": "2024-01-25T00:00:00+09:00",
+                                    "gte": "2024-01-24T00:00:00+09:00"
+                                }
+                            }
+                        },
+                        {
+                            "range": {
+                                "value.value": {
+                                    "lt": "100000",
+                                    "gte": "-100000"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "aggs": {
+                "timechunk": {
+                    "date_histogram": {
+                        "fixed_interval": "1d",
+                        "field": "@timestamp",
+                        "offset": "-9h"
+                    },
+                    "aggs": {
+                        "sensor_sn": {
+                            "terms": {
+                                "field": "device_id",
+                                "size": 1000
+                            },
+                            "aggs": {
+                                "agg": {
+                                    "sum": {
+                                        "field": "value.DC_Power"
+                                    }
+                                }
+                            }
+                        },
+                        "agg": {
+                            "sum_bucket": {
+                                "buckets_path": "sensor_sn>agg"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "cumulative": {
+            "filter": {
+                "terms": {
+                    "data_source": ["moon", "sun", "earth"]
+                }
+            },
+            "aggs": {
+                "building": {
+                    "terms": {
+                        "field": "position.building",
+                        "size": 1000
+                    },
+                    "aggs": {
+                        "floor": {
+                            "terms": {
+                                "field": "position.floor",
+                                "size": 1000
+                            },
+                            "aggs": {
+                                "room": {
+                                    "terms": {
+                                        "field": "position.room",
+                                        "size": 1000
+                                    },
+                                    "aggs": {
+                                        "sensor": {
+                                            "terms": {
+                                                "field": "device_id",
+                                                "size": 1000
+                                            },
+                                            "aggs": {
+                                                "timechunk": {
+                                                    "date_histogram": {
+                                                        "fixed_interval": "1d",
+                                                        "field": "@timestamp",
+                                                        "offset": "-9h"
+                                                    },
+                                                    "aggs": {
+                                                        "agg": {
+                                                            "derivative": {
+                                                                "buckets_path": "beforeagg"
+                                                            }
+                                                        },
+                                                        "beforeagg": {
+                                                            "max": {
+                                                                "field": "value.value"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
