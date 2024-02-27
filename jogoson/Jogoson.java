@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class Jogoson {
 
-    public Object parseValue( String ss ){
-        StringToBeParsed s = new StringToBeParsed(ss);
+    public Object deserialize( String jsonString ){
+        StringToBeParsed s = new StringToBeParsed( jsonString );
 
         Object result = parseValue(s);
 

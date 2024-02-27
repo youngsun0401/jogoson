@@ -23,7 +23,7 @@ public class Main {
         // System.out.println((t1-t0)/1000.0);
 
         Jogoson j = new Jogoson();
-        Object o = j.parseValue(str);
+        Object o = j.deserialize(str);
         System.out.println(o);
 
         System.out.println("BYE WORLD !");
