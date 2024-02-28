@@ -1,9 +1,9 @@
 package jogoson.wrap;
 
-public class JoWrapString extends JoWrapStr {
+public class JoWrapText extends JoWrapStr {
     private final String value;
 
-    public JoWrapString( String value ){
+    public JoWrapText( String value ){
         this.value = value;
     }
 
