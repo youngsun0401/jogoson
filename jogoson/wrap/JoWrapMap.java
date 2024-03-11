@@ -1,11 +1,14 @@
 package jogoson.wrap;
 
+import java.lang.reflect.Constructor;
 import java.util.Map;
+
+import jogoson.Jogoson;
 
 public class JoWrapMap extends JoWrapObj {
     private final Map<?, ?> value;
 
-    public JoWrapMap(  Map<?, ?> value ){
+    public JoWrapMap( Map<?, ?> value ){
         this.value = value;
     }
 
@@ -21,11 +24,11 @@ public class JoWrapMap extends JoWrapObj {
 
     @Override
     public JoWrap get( String key ) {
-        return null;// TODO
+        return JoWrap.create( value.get(key) );
     }
 
     @Override
     public JoWrap get( int index ) {
-        return null;// TODO
+        return JoWrap.create( value.get( String.valueOf(index) ) );
     }
 }

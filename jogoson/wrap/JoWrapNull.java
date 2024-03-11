@@ -2,6 +2,10 @@ package jogoson.wrap;
 
 public class JoWrapNull extends JoWrapLeaf {
 
+    public static JoWrapNull instance = new JoWrapNull();
+
+    private JoWrapNull(){}
+
     @Override
     public Object getValue() {
         return null;

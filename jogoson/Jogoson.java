@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jogoson.wrap.JoWrap;
+
 public class Jogoson {
 
     public Object deserialize( String jsonString ){

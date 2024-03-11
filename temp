@@ -1,0 +1,176 @@
+package jogoson;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class JoNode {
+    Object value;
+
+    public JoNode( Object value ){
+        this.value = value;
+    }
+
+    public Object getValue(){
+        return value;
+    }
+
+    /**
+     * value가 object인 경우 하위 필드의 값으로 value를 대체한다.
+     * value가 array인 경우 하위 각 요소의 필드의 값들을 모아 새 array를 구성 후 그것으로 value를 대체한다.
+     *
+     * @param key
+     * @return this
+     */
+    public JoNode go( String key ){
+        Object newValue;
+        try{
+            newValue = getFromMap( value, key );
+        }catch( ClassCastException e_obj ){
+            try{
+                newValue = getFromList( value, key );
+            }catch( ClassCastException e_arr ){
+                try{
+                    newValue = getFromPojo( value, key );
+                }catch( ClassCastException e_pojo ){
+                    throw new JoIllegalCallerException("cannot go into the value (" + value.getClass() + ")" + value);
+                }
+            }
+        }
+        value = newValue;
+        return this;
+    }
+
+    public JoNode go( int index ){
+        Object newValue;
+        try{
+            newValue = getFromMap( value, index );
+        }catch( ClassCastException e_obj ){
+            try{
+                newValue = getFromList( value, index );
+            }catch( ClassCastException e_arr ){
+                throw new JoIllegalCallerException("cannot go into the value (" + value.getClass() + ")" + value);
+            }
+        }
+        value = newValue;
+        return this;
+    }
+
+    /**
+     * value가 object인 경우 하위 필드의 값을 value로 하는 새 노드를 생성한다.
+     * value가 array인 경우 하위 각 요소의 필드의 값들을 모아 새 array를 구성 후 그것을 value로 하는 새 노드를 생성한다.
+     *
+     * @param key
+     * @return new JoNode
+     */
+    public JoNode get( String key ){
+        Object newValue;
+        try{
+            newValue = getFromMap( value, key );
+        }catch( ClassCastException e_obj ){
+            try{
+                newValue = getFromList( value, key );
+            }catch( ClassCastException e_arr ){
+                try{
+                    newValue = getFromPojo( value, key );
+                }catch( ClassCastException e_pojo ){
+                    throw new JoIllegalCallerException("cannot go into the value (" + value.getClass() + ")" + value);
+                }
+            }
+        }
+        return new JoNode(newValue);
+    }
+
+    public JoNode get( int index ){
+        Object newValue;
+        try{
+            newValue = getFromMap( value, index );
+        }catch( ClassCastException e_obj ){
+            try{
+                newValue = getFromList( value, index );
+            }catch( ClassCastException e_arr ){
+                throw new JoIllegalCallerException("cannot go into the value (" + value.getClass() + ")" + value);
+            }
+        }
+        return new JoNode(newValue);
+    }
+
+    /**
+     * go와 기능이 같으나 value가 null인 경우에 에러가 나지 않고 넘어감
+     *
+     * @param key
+     */
+    public JoNode qo( String key ){
+        if( value == null ){
+            return this;
+        }
+        return go( key );
+    }
+
+    /**
+     * get과 기능이 같으나 value가 null인 경우에 에러가 나지 않고 JoNode(null)을 반환
+     *
+     * @param key
+     */
+    public JoNode qet( String key ){
+        if( value == null ){
+            return new JoNode( null );
+        }
+        return get( key );
+    }
+
+    public JoNode qoqo( String path ){
+        String[] keyList = splitPath( path, '.' );
+        for(String key : keyList){
+            qo(key);
+        }
+        return this;
+    }
+
+    public JoNode qetqet( String path ){
+        JoNode result = new JoNode(value);
+        result.qoqo(path);
+        return result;
+    }
+
+    protected String[] splitPath( String path, char splitter ){
+        String[] todo = {"a", "b", "c"};
+        return todo;
+    }
+
+    private Object getFromMap( Object source, String key ){
+        return ((Map<?, ?>)source).get(key);
+    }
+
+    private Object getFromMap( Object source, int index ){
+        return ((Map<?, ?>)source).get( String.valueOf(index) );
+    }
+
+    private List<?> getFromList( Object source, String key ){
+        List<Object> result = new ArrayList<>();
+        List<?> list = (List<?>) source;
+        for( Object item : list ){
+            result.add(((Map<?, ?>)item).get(key));
+        }
+        return result;
+    }
+
+    private Object getFromList( Object source, int index ){
+        return ((List<?>) source).get(index);
+    }
+
+    private Object getFromPojo( Object pojo, String key ){
+        String getterName = "get" + Character.toUpperCase(key.charAt(0)) + key.substring(1);
+        try {
+            Object result = pojo.getClass().getMethod(getterName);
+            return result;
+        } catch (NoSuchMethodException | SecurityException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String toString(){
+        return "";// TODO
+    }
+}
